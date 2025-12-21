@@ -28,8 +28,8 @@ export class AppController {
 
   @Get('/error')
   getError(
-    @Query() errorCode: number,
-    @Query() random: boolean = false,
+    @Query('errorCode') errorCode: number,
+    @Query('random') random: boolean = false,
   ): string {
     let randomErrorCode: number | undefined;
 
@@ -58,16 +58,18 @@ export class AppController {
 
   @Get('/consume')
   async getConsumeTime(
-    @Query() durationInSeconds: number,
-    @Query() random: boolean = false,
+    @Query('duration') duration: number,
+    @Query('random') random: boolean = false,
   ): Promise<string> {
+    let sleepDuration: number;
+
     if (random) {
-      const randomDuration = getRandomInt(1, 30);
-      await sleep(randomDuration * 1000);
+      sleepDuration = getRandomInt(1, 30);
     } else {
-      await sleep(durationInSeconds ? durationInSeconds * 1000 : 3000);
+      sleepDuration = duration ?? 3;
     }
 
-    return this.appService.getHello();
+    await sleep(sleepDuration * 1000);
+    return `completed after ${sleepDuration} seconds`;
   }
 }
