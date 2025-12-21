@@ -67,4 +67,29 @@ export class AppController {
     await sleep(sleepDuration * 1000);
     return `completed after ${sleepDuration} seconds`;
   }
+
+  @Get('/random')
+  async getRandomRequest() {
+    let sleepDuration: number = getRandomInt(1, 10) * 1000;
+    await sleep(sleepDuration);
+
+    const isError: boolean = Math.random() < 0.5;
+
+    if (isError) {
+      const errorCodes = [400, 403, 500, 503];
+      const randomErrorCode = getRandomItem<number>(errorCodes);
+      Logger.log(
+        `Random request resulted in error. Throwing error code: ${randomErrorCode}`,
+      );
+      throw new HttpException(
+        `Simulated random error ${randomErrorCode}`,
+        randomErrorCode as number,
+      );
+    }
+
+    Logger.log(
+      `Random request successful after ${sleepDuration / 1000} seconds`,
+    );
+    return `random request successful after ${sleepDuration / 1000} seconds`;
+  }
 }
