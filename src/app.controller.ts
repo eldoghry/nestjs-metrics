@@ -4,13 +4,13 @@ import {
   ForbiddenException,
   Get,
   HttpException,
+  Logger,
   Param,
   Query,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { getRandomInt, getRandomItem, sleep } from './helper';
-import { get } from 'http';
 
 @Controller()
 export class AppController {
@@ -23,6 +23,7 @@ export class AppController {
 
   @Get('/success')
   getSuccess(): string {
+    Logger.log('Successful request received');
     return this.appService.getHello();
   }
 
@@ -36,24 +37,17 @@ export class AppController {
     if (random) {
       const errorCodes = [400, 403, 503, 500];
       randomErrorCode = getRandomItem<number>(errorCodes);
-      throw new HttpException(
-        `Simulated random error ${randomErrorCode}`,
-        randomErrorCode as number,
-      );
     } else {
-      randomErrorCode = errorCode;
+      randomErrorCode = errorCode ?? 500;
     }
 
-    switch (randomErrorCode) {
-      case 400:
-        throw new BadRequestException('Bad Request Exception');
-      case 403:
-        throw new ForbiddenException('Forbidden Exception');
-      case 503:
-        throw new ServiceUnavailableException('Service Unavailable Exception');
-      default:
-        throw new Error('Simulated error');
-    }
+    Logger.log(
+      `Error request received. Throwing error code: ${randomErrorCode}`,
+    );
+    throw new HttpException(
+      `Simulated random error ${randomErrorCode}`,
+      randomErrorCode as number,
+    );
   }
 
   @Get('/consume')
@@ -69,6 +63,7 @@ export class AppController {
       sleepDuration = duration ?? 3;
     }
 
+    Logger.log(`Consuming time: ${sleepDuration} seconds`);
     await sleep(sleepDuration * 1000);
     return `completed after ${sleepDuration} seconds`;
   }
