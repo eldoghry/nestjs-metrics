@@ -4,7 +4,8 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, catchError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { httpRequestDuration, httpRequestsTotal } from '../metrics/metrics';
 
 @Injectable()
@@ -34,6 +35,30 @@ export class MetricsInterceptor implements NestInterceptor {
           route,
           status: res.statusCode,
         });
+      }),
+
+      catchError((err) => {
+        const duration = (Date.now() - start) / 1000;
+
+        const status = err?.status || err?.response?.statusCode || 500;
+
+        httpRequestDuration.observe(
+          {
+            method: req.method,
+            route,
+            status,
+          },
+          duration,
+        );
+
+        httpRequestsTotal.inc({
+          method: req.method,
+          route,
+          status,
+        });
+
+        // مهم جدًا: نرمي الخطأ تاني
+        return throwError(() => err);
       }),
     );
   }
