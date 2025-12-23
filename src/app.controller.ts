@@ -43,13 +43,19 @@ export class AppController {
       randomErrorCode = errorCode ?? 500;
     }
 
-    this.logger.log(
-      `Error request received. Throwing error code: ${randomErrorCode}`,
-    );
-    throw new HttpException(
-      `Simulated random error ${randomErrorCode}`,
-      randomErrorCode as number,
-    );
+    try {
+      throw new HttpException(
+        `Simulated random error ${randomErrorCode}`,
+        randomErrorCode as number,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Error request received: ${error.message}`,
+        error?.stack,
+      );
+
+      throw error;
+    }
   }
 
   @Get('/consume')
@@ -84,10 +90,20 @@ export class AppController {
       this.logger.log(
         `Random request resulted in error. Throwing error code: ${randomErrorCode}`,
       );
-      throw new HttpException(
-        `Simulated random error ${randomErrorCode}`,
-        randomErrorCode as number,
-      );
+
+      try {
+        throw new HttpException(
+          `Simulated random error ${randomErrorCode}`,
+          randomErrorCode as number,
+        );
+      } catch (error) {
+        this.logger.error(
+          `Error request received: ${error.message}`,
+          error?.stack,
+        );
+
+        throw error;
+      }
     }
 
     this.logger.log(
