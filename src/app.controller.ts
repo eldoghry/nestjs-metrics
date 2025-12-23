@@ -71,6 +71,7 @@ export class AppController {
       sleepDuration = duration ?? 3;
     }
 
+    this.logger.log({ xxx: 'Starting consuming time', sleepDuration });
     this.logger.log(`Consuming time: ${sleepDuration} seconds`);
     await sleep(sleepDuration * 1000);
     this.logger.log(`Consuming completed after ${sleepDuration} seconds`);

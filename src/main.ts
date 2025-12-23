@@ -6,6 +6,7 @@ import { MetricsInterceptor } from './interceptors/metrics.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 import morgan from 'morgan';
 import { Logger } from 'nestjs-pino';
+import { Request } from 'express';
 
 async function bootstrap() {
   promoClient.collectDefaultMetrics({ prefix: 'backend_1_' });
@@ -19,7 +20,11 @@ async function bootstrap() {
 
   const PORT = process.env.PORT || 3000;
 
-  app.use(morgan('combined'));
+  app.use(
+    morgan('combined', {
+      skip: (req: Request, _) => req.path === '/metrics',
+    }),
+  );
 
   app.useGlobalInterceptors(new MetricsInterceptor());
 
