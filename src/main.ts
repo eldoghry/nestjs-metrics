@@ -22,7 +22,7 @@ async function bootstrap() {
 
   app.use(
     morgan('combined', {
-      skip: (req: Request, _) => req.path === '/metrics',
+      skip: (req: Request, _) => req.url === '/metrics',
     }),
   );
 
