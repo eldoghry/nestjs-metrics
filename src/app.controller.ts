@@ -14,6 +14,8 @@ import { getRandomInt, getRandomItem, sleep } from './helper';
 
 @Controller()
 export class AppController {
+  private readonly logger = new Logger(AppController.name);
+
   constructor(private readonly appService: AppService) {}
 
   @Get()
@@ -23,7 +25,7 @@ export class AppController {
 
   @Get('/success')
   getSuccess(): string {
-    Logger.log('Successful request received');
+    this.logger.log('Successful request received');
     return this.appService.getHello();
   }
 
@@ -41,7 +43,7 @@ export class AppController {
       randomErrorCode = errorCode ?? 500;
     }
 
-    Logger.log(
+    this.logger.log(
       `Error request received. Throwing error code: ${randomErrorCode}`,
     );
     throw new HttpException(
@@ -63,8 +65,9 @@ export class AppController {
       sleepDuration = duration ?? 3;
     }
 
-    Logger.log(`Consuming time: ${sleepDuration} seconds`);
+    this.logger.log(`Consuming time: ${sleepDuration} seconds`);
     await sleep(sleepDuration * 1000);
+    this.logger.log(`Consuming completed after ${sleepDuration} seconds`);
     return `completed after ${sleepDuration} seconds`;
   }
 
@@ -78,7 +81,7 @@ export class AppController {
     if (isError) {
       const errorCodes = [400, 403, 500, 503];
       const randomErrorCode = getRandomItem<number>(errorCodes);
-      Logger.log(
+      this.logger.log(
         `Random request resulted in error. Throwing error code: ${randomErrorCode}`,
       );
       throw new HttpException(
@@ -87,7 +90,7 @@ export class AppController {
       );
     }
 
-    Logger.log(
+    this.logger.log(
       `Random request successful after ${sleepDuration / 1000} seconds`,
     );
     return `random request successful after ${sleepDuration / 1000} seconds`;
