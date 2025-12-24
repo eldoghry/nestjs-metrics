@@ -77,7 +77,9 @@ export class AppController {
       sleepDuration = duration ?? 3;
     }
 
-    this.logger.info({ xxx: 'Starting consuming time', sleepDuration });
+    const dummyObject = { xxx: 'Starting consuming time', sleepDuration };
+
+    this.logger.info('Consuming time started', dummyObject);
     this.logger.info(`Consuming time: ${sleepDuration} seconds`);
     await sleep(sleepDuration * 1000);
     this.logger.info(`Consuming completed after ${sleepDuration} seconds`);
@@ -104,10 +106,7 @@ export class AppController {
           randomErrorCode as number,
         );
       } catch (error) {
-        this.logger.error(
-          `Error request received: ${error.message}`,
-          error?.stack,
-        );
+        this.logger.error(`Error request received: ${error.message}`, error);
 
         throw error;
       }
