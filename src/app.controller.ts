@@ -11,12 +11,18 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { getRandomInt, getRandomItem, sleep } from './helper';
+import { PinoLogger } from 'nestjs-pino';
 
 @Controller()
 export class AppController {
-  private readonly logger = new Logger(AppController.name);
+  // private readonly logger = new Logger(AppController.name);
 
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly logger: PinoLogger,
+    private readonly appService: AppService,
+  ) {
+    this.logger.setContext(AppController.name);
+  }
 
   @Get()
   getHello(): string {
@@ -25,7 +31,7 @@ export class AppController {
 
   @Get('/success')
   getSuccess(): string {
-    this.logger.log('Successful request received');
+    this.logger.info('Successful request received');
     return this.appService.getHello();
   }
 
@@ -71,10 +77,10 @@ export class AppController {
       sleepDuration = duration ?? 3;
     }
 
-    this.logger.log({ xxx: 'Starting consuming time', sleepDuration });
-    this.logger.log(`Consuming time: ${sleepDuration} seconds`);
+    this.logger.info({ xxx: 'Starting consuming time', sleepDuration });
+    this.logger.info(`Consuming time: ${sleepDuration} seconds`);
     await sleep(sleepDuration * 1000);
-    this.logger.log(`Consuming completed after ${sleepDuration} seconds`);
+    this.logger.info(`Consuming completed after ${sleepDuration} seconds`);
     return `completed after ${sleepDuration} seconds`;
   }
 
@@ -88,7 +94,7 @@ export class AppController {
     if (isError) {
       const errorCodes = [400, 403, 500, 503];
       const randomErrorCode = getRandomItem<number>(errorCodes);
-      this.logger.log(
+      this.logger.info(
         `Random request resulted in error. Throwing error code: ${randomErrorCode}`,
       );
 
@@ -107,7 +113,7 @@ export class AppController {
       }
     }
 
-    this.logger.log(
+    this.logger.info(
       `Random request successful after ${sleepDuration / 1000} seconds`,
     );
     return `random request successful after ${sleepDuration / 1000} seconds`;

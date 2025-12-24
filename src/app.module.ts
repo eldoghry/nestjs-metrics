@@ -13,8 +13,12 @@ import { trace, context } from '@opentelemetry/api';
         mixin() {
           const span = trace.getSpan(context.active());
           if (!span) return {};
-          const { traceId } = span.spanContext();
-          return { trace_id: traceId };
+
+          const spanContext = span.spanContext();
+          return {
+            trace_id: spanContext.traceId,
+            span_id: spanContext.spanId,
+          };
         },
         // 2. Formatting
         transport:
