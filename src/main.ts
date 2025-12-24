@@ -16,7 +16,7 @@ async function bootstrap() {
   });
 
   // Use pino logger as global logger
-  app.useLogger(app.get(PinoLogger));
+  // app.useLogger(app.get(PinoLogger));
 
   const PORT = process.env.PORT || 3000;
 
@@ -35,8 +35,8 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen(PORT, () => {
-    const logger = app.get(PinoLogger);
+  await app.listen(PORT, async () => {
+    const logger = await app.resolve<PinoLogger>(PinoLogger);
     logger.info(`Application is running on: http://localhost:${PORT}`);
     logger.info(`Metrics available at: http://localhost:${PORT}/metrics`);
     logger.info(`Environment: ${process.env.NODE_ENV}`);
