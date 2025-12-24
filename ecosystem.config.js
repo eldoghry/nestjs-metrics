@@ -7,7 +7,7 @@ module.exports = {
       exec_mode: 'cluster',
 
       // --- Logging Configuration ---
-      log_type: 'json', // Crucial: Forces PM2 to output pure JSON
+      // log_type: 'json', // Crucial: Forces PM2 to output pure JSON
       merge_logs: true, // Combines logs from all CPU instances into one file
       out_file: './logs/app-out.log', // Standard logs (info, debug)
       error_file: './logs/app-err.log', // Error logs
