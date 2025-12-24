@@ -115,7 +115,7 @@ export class AppController {
         );
       } catch (error) {
         this.logger.error(`Error request received: ${error.message}`, error);
-
+        this.logger.error(error, `XX Error request received: ${error.message}`);
         throw error;
       }
     }
