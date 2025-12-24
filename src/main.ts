@@ -5,7 +5,7 @@ import * as promoClient from 'prom-client';
 import { MetricsInterceptor } from './interceptors/metrics.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 import morgan from 'morgan';
-import { Logger } from 'nestjs-pino';
+import { PinoLogger } from 'nestjs-pino';
 import { Request } from 'express';
 
 async function bootstrap() {
@@ -16,15 +16,15 @@ async function bootstrap() {
   });
 
   // Use pino logger as global logger
-  app.useLogger(app.get(Logger));
+  app.useLogger(app.get(PinoLogger));
 
   const PORT = process.env.PORT || 3000;
 
-  app.use(
-    morgan('combined', {
-      skip: (req: Request, _) => req.url === '/metrics',
-    }),
-  );
+  // app.use(
+  //   morgan('combined', {
+  //     skip: (req: Request, _) => req.url === '/metrics',
+  //   }),
+  // );
 
   app.useGlobalInterceptors(new MetricsInterceptor());
 
@@ -36,9 +36,10 @@ async function bootstrap() {
   );
 
   await app.listen(PORT, () => {
-    console.log(`Application is running on: http://localhost:${PORT}`);
-    console.log(`Metrics available at: http://localhost:${PORT}/metrics`);
-    console.log(`Environment: ${process.env.NODE_ENV}`);
+    const logger = app.get(PinoLogger);
+    logger.info(`Application is running on: http://localhost:${PORT}`);
+    logger.info(`Metrics available at: http://localhost:${PORT}/metrics`);
+    logger.info(`Environment: ${process.env.NODE_ENV}`);
   });
 }
 

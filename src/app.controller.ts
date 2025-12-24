@@ -85,10 +85,10 @@ export class AppController {
       value: 12345,
     };
 
-    this.logger.info('Consuming time started', dummyObject1);
-    this.logger.info(dummyObject2);
+    // this.logger.info('Consuming time started', dummyObject1);
+    // this.logger.info(dummyObject2);
     this.logger.info(dummyObject3, 'logging dummy object 3');
-    this.logger.info(`Consuming time: ${sleepDuration} seconds`);
+    this.logger.warn(`Consuming time: ${sleepDuration} seconds`);
     await sleep(sleepDuration * 1000);
     this.logger.info(`Consuming completed after ${sleepDuration} seconds`);
     return `completed after ${sleepDuration} seconds`;
@@ -104,7 +104,7 @@ export class AppController {
     if (isError) {
       const errorCodes = [400, 403, 500, 503];
       const randomErrorCode = getRandomItem<number>(errorCodes);
-      this.logger.info(
+      this.logger.warn(
         `Random request resulted in error. Throwing error code: ${randomErrorCode}`,
       );
 
@@ -114,7 +114,7 @@ export class AppController {
           randomErrorCode as number,
         );
       } catch (error) {
-        this.logger.error(`Error request received: ${error.message}`, error);
+        this.logger.error(`YY Error request received: ${error.message}`, error);
         this.logger.error(error, `XX Error request received: ${error.message}`);
         throw error;
       }
