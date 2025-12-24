@@ -79,9 +79,15 @@ export class AppController {
 
     const dummyObject1 = { xxx: 'dummyObject1', sleepDuration };
     const dummyObject2 = { xxx: 'dummyObject2', sleepDuration };
+    const dummyObject3 = {
+      xxx: 'dummyObject3',
+      name: 'some name',
+      value: 12345,
+    };
 
     this.logger.info('Consuming time started', dummyObject1);
     this.logger.info(dummyObject2);
+    this.logger.info(dummyObject3, 'logging dummy object 3');
     this.logger.info(`Consuming time: ${sleepDuration} seconds`);
     await sleep(sleepDuration * 1000);
     this.logger.info(`Consuming completed after ${sleepDuration} seconds`);
