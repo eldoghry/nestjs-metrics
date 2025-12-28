@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { MetricsModule } from './metrics/metrics.module';
 import { LoggerModule } from 'nestjs-pino';
 import { trace, context } from '@opentelemetry/api';
+import { AxiosModule } from './axios/axios.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { trace, context } from '@opentelemetry/api';
       },
     }),
     MetricsModule,
+    AxiosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

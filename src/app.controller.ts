@@ -1,4 +1,5 @@
 import {
+  BadGatewayException,
   BadRequestException,
   Controller,
   ForbiddenException,
@@ -124,5 +125,20 @@ export class AppController {
       `Random request successful after ${sleepDuration / 1000} seconds`,
     );
     return `random request successful after ${sleepDuration / 1000} seconds`;
+  }
+
+  @Get('/axios/1')
+  async testAxios1() {
+    return this.appService.testAxios1();
+  }
+
+  @Get('/almost-error')
+  async almostError() {
+    const isFail = Math.random() < 0.5;
+    if (isFail) {
+      throw new BadGatewayException();
+    }
+
+    return { message: 'response success with data' };
   }
 }
