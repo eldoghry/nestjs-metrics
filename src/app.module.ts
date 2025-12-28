@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MetricsModule } from './metrics/metrics.module';
 import { LoggerModule } from 'nestjs-pino';
 import { trace, context } from '@opentelemetry/api';
 import { AxiosModule } from './axios/axios.module';
+import { AuthMiddleware } from './middlewares/auth.middleware';
 
 @Module({
   imports: [
@@ -36,4 +37,8 @@ import { AxiosModule } from './axios/axios.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes('*'); // Apply to all routes
+  }
+}
