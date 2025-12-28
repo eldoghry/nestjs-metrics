@@ -13,6 +13,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
       pinoHttp: (() => {
         const isProduction = process.env.NODE_ENV === 'production';
         const isDebugMode = process.env.DEBUG_MODE === 'true';
+        const shouldRedact = !isProduction && !isDebugMode;
 
         const mixin = () => {
           const span = trace.getSpan(context.active());
@@ -42,7 +43,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
           level: isProduction ? 'info' : isDebugMode ? 'debug' : 'info',
           // Redact request/response bodies/headers by default (minimal in dev).
           // When DEBUG=true, don't redact so request/response details are visible.
-          redact: isDebugMode
+          redact: shouldRedact
             ? undefined
             : ['req.headers', 'req.body', 'res.headers', 'res.body'],
         } as const;
