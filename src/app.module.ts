@@ -44,8 +44,8 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
           // Redact request/response bodies/headers by default (minimal in dev).
           // When DEBUG=true, don't redact so request/response details are visible.
           redact: shouldRedact
-            ? undefined
-            : ['req.headers', 'req.body', 'res.headers', 'res.body'],
+            ? ['req.headers', 'req.body', 'res.headers', 'res.body']
+            : undefined,
         } as const;
       })(),
     }),
