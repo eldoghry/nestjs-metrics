@@ -7,6 +7,7 @@ import { ValidationPipe } from '@nestjs/common';
 import morgan from 'morgan';
 import { PinoLogger } from 'nestjs-pino';
 import { Request } from 'express';
+import { GlobalExceptionFilter } from './filters/global-exception.filter';
 
 async function bootstrap() {
   promoClient.collectDefaultMetrics({ prefix: 'backend_1_' });
@@ -34,6 +35,8 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   await app.listen(PORT, async () => {
     const logger = await app.resolve<PinoLogger>(PinoLogger);
