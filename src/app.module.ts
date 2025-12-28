@@ -13,7 +13,7 @@ import { AuthMiddleware } from './middlewares/auth.middleware';
       pinoHttp: (() => {
         const isProduction = process.env.NODE_ENV === 'production';
         const isDebugMode = process.env.DEBUG_MODE === 'true';
-        const shouldRedact = !isProduction && !isDebugMode;
+        const shouldRedact = isProduction ? false : !isDebugMode;
 
         const mixin = () => {
           const span = trace.getSpan(context.active());
