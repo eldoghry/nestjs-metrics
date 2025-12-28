@@ -57,8 +57,8 @@ export class AppController {
       );
     } catch (error) {
       this.logger.error(
+        { stack: error?.stack, error },
         `Error request received: ${error.message}`,
-        error?.stack,
       );
 
       throw error;
@@ -115,8 +115,10 @@ export class AppController {
           randomErrorCode as number,
         );
       } catch (error) {
-        this.logger.error(`YY Error request received: ${error.message}`, error);
-        this.logger.error(error, `XX Error request received: ${error.message}`);
+        this.logger.error(
+          { stack: error?.stack, error },
+          `XX Error request received: ${error.message}`,
+        );
         throw error;
       }
     }
