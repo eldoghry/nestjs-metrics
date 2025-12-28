@@ -131,12 +131,16 @@ export class AppController {
 
   @Get('/axios/1')
   async testAxios1() {
+    this.logger.info('Calling testAxios1 from app.controller');
     return this.appService.testAxios1();
   }
 
   @Get('/almost-error')
   async almostError() {
-    const isFail = Math.random() < 0.5;
+    this.logger.info('Calling almostError from app.controller');
+
+    const isFail = Math.random() < 0.8;
+
     if (isFail) {
       throw new BadGatewayException();
     }

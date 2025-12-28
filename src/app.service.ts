@@ -21,6 +21,8 @@ export class AppService {
   }
 
   async testAxios1() {
+    this.logger.info('Calling testAxios1 from app.service');
+
     try {
       const response = await this.axiosService.instance.get('/almost-error');
 
