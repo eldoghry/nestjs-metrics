@@ -5,6 +5,7 @@ import {
   ATTR_SERVICE_NAME,
   ATTR_SERVICE_VERSION,
 } from '@opentelemetry/semantic-conventions';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 
 // 1. Create the resource using the helper function instead of the 'new Resource' constructor
 const appResource = resourceFromAttributes({
@@ -15,6 +16,12 @@ const appResource = resourceFromAttributes({
 const sdk = new NodeSDK({
   resource: appResource,
   instrumentations: [getNodeAutoInstrumentations()],
+  // Use OTLP HTTP exporter (endpoint can be set via env var OTEL_EXPORTER_OTLP_ENDPOINT)
+  traceExporter: new OTLPTraceExporter({
+    url:
+      process.env.OTEL_EXPORTER_OTLP_ENDPOINT ??
+      'http://localhost:4318/v1/traces',
+  }),
 });
 
 try {
