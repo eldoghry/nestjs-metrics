@@ -88,7 +88,7 @@ export class AppController {
 
     // this.logger.info('Consuming time started', dummyObject1);
     // this.logger.info(dummyObject2);
-    this.logger.info(dummyObject3, 'logging dummy object 3');
+    this.logger.info({ dummyObject3 }, 'logging dummy object 3');
     this.logger.warn(`Consuming time: ${sleepDuration} seconds`);
     await sleep(sleepDuration * 1000);
     this.logger.info(`Consuming completed after ${sleepDuration} seconds`);
