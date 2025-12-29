@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AxiosService } from './axios/axios.service';
-import { PinoLogger } from 'nestjs-pino';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 @Injectable()
 export class AppService {
@@ -8,10 +8,10 @@ export class AppService {
 
   constructor(
     private readonly axiosService: AxiosService,
+
+    @InjectPinoLogger(AppService.name)
     private readonly logger: PinoLogger,
-  ) {
-    this.logger.setContext(AppService.name);
-  }
+  ) {}
 
   getHello(): string {
     this.logger.info('step: 1 - getHello called');

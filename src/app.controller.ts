@@ -12,18 +12,17 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { getRandomInt, getRandomItem, sleep } from './helper';
-import { PinoLogger } from 'nestjs-pino';
+import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 
 @Controller()
 export class AppController {
   // private readonly logger = new Logger(AppController.name);
 
   constructor(
+    @InjectPinoLogger(AppController.name)
     private readonly logger: PinoLogger,
     private readonly appService: AppService,
-  ) {
-    this.logger.setContext(AppController.name);
-  }
+  ) {}
 
   @Get()
   getHello(): string {

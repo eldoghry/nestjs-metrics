@@ -9,8 +9,8 @@ module.exports = {
       // --- Logging Configuration ---
       // log_type: 'json', // Crucial: Forces PM2 to output pure JSON
       merge_logs: true, // Combines logs from all CPU instances into one file
-      out_file: './logs/app-out.log', // Standard logs (info, debug)
-      error_file: './logs/app-err.log', // Error logs
+      out_file: './logs/pm2-out.log', // Standard logs (info, debug)
+      error_file: './logs/pm2-err.log', // Error logs
 
       // --- Environment Variables ---
       env_production: {
