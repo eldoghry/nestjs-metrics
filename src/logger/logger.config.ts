@@ -34,6 +34,7 @@ const generateConsoleStreamIgnoreKeys = (): string => {
     'trace_id',
     'span_id',
     'trace_flags',
+    'context',
   ];
 
   // In production and non-debug mode, ignore more keys
@@ -81,8 +82,9 @@ export const createLoggerStream = (): StreamEntry[] => {
       const status = log.response?.statusCode ?? '-';
       const time = log.responseTime ?? '-';
       const trace = log.trace_id?.slice(0, 8) ?? '-';
+      const context = log.context ?? '';
 
-      return `${method} ${url} ${status} (${time}ms) [${trace}] ${log[messageKey]}`;
+      return `${context} ${method} ${url} ${status} (${time}ms) [${trace}] ${log[messageKey]}`;
     },
     customColors: 'debug:blue,info:green,warn:yellow,error:red,fatal:magenta',
   });

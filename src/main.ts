@@ -5,7 +5,7 @@ import * as promoClient from 'prom-client';
 import { MetricsInterceptor } from './interceptors/metrics.interceptor';
 import { ValidationPipe } from '@nestjs/common';
 import morgan from 'morgan';
-import { PinoLogger } from 'nestjs-pino';
+import { PinoLogger, Logger } from 'nestjs-pino';
 import { Request } from 'express';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
 
@@ -17,7 +17,7 @@ async function bootstrap() {
   });
 
   // Use pino logger as global logger
-  // app.useLogger(app.get(PinoLogger));
+  app.useLogger(app.get(Logger));
 
   const PORT = process.env.PORT || 3000;
 
