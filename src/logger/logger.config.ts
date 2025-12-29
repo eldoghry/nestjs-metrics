@@ -35,6 +35,7 @@ const generateConsoleStreamIgnoreKeys = (): string => {
     'span_id',
     'trace_flags',
     'context',
+    // 'responseTime',
   ];
 
   // In production and non-debug mode, ignore more keys
