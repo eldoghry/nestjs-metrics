@@ -154,7 +154,7 @@ export const getLoggerConfig = (): Params => {
           };
 
           // Only include headers in non-production or debug mode
-          if (!isProduction || isDebugMode) {
+          if (isProduction || isDebugMode) {
             serialized.headers = req?.headers;
           }
 
@@ -166,7 +166,7 @@ export const getLoggerConfig = (): Params => {
           };
 
           // Only include headers in non-production or debug mode
-          if (!isProduction || isDebugMode) {
+          if (isProduction || isDebugMode) {
             serialized.headers = res?.headers;
           }
 
