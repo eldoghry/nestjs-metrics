@@ -4,10 +4,11 @@ module.exports = {
       name: 'nestjs-backend',
       script: './dist/main.js', // Path to your compiled NestJS entry point
       instances: '1', // Use all CPU cores (cluster mode)
-      exec_mode: 'cluster',
+      exec_mode: 'fork',
 
       // --- Logging Configuration ---
       // log_type: 'json', // Crucial: Forces PM2 to output pure JSON
+      log_type: 'raw',
       merge_logs: true, // Combines logs from all CPU instances into one file
       out_file: './logs/pm2-out.log', // Standard logs (info, debug)
       error_file: './logs/pm2-err.log', // Error logs

@@ -23,7 +23,7 @@ const getTraceContext = () => {
 };
 
 const generateConsoleStreamIgnoreKeys = (): string => {
-  const isProduction = process.env.NODE_ENV === 'production';
+  // const isProduction = process.env.NODE_ENV === 'production';
   const isDebugMode = process.env.DEBUG_MODE === 'true';
 
   let ignoreKeys = [
@@ -37,7 +37,7 @@ const generateConsoleStreamIgnoreKeys = (): string => {
   ];
 
   // In production and non-debug mode, ignore more keys
-  if (!isProduction && !isDebugMode) {
+  if (!isDebugMode) {
     ignoreKeys.push(...['requestId', 'userAgent', 'ip', 'request', 'response']);
   }
 
@@ -53,19 +53,45 @@ export const createLoggerStream = (): StreamEntry[] => {
 
   const pinoPretty = require('pino-pretty');
 
+  // const consoleStream: StreamEntry = {
+  //   level: isProduction ? 'info' : 'debug',
+  //   stream: isProduction
+  //     ? process.stdout
+  //     : pinoPretty({
+  //         colorize: true,
+  //         levelFirst: true,
+  //         translateTime: 'SYS:standard',
+  //         ignore: generateConsoleStreamIgnoreKeys(),
+  //         messageFormat:
+  //           '{level} [{service}/{env}]: {request.method} {request.url} {response.statusCode} {msg}',
+  //         customColors:
+  //           'debug:blue,info:green,warn:yellow,error:red,fatal:magenta',
+  //       }),
+  // };
+
+  const prettyStream = pinoPretty({
+    colorize: true,
+    levelFirst: true,
+    translateTime: 'SYS:standard',
+    ignore: generateConsoleStreamIgnoreKeys(),
+    // 🧾 Human-friendly message
+    messageFormat: (log, messageKey) => {
+      const method = log.request?.method ?? '-';
+      const url = log.request?.url ?? '-';
+      const status = log.response?.statusCode ?? '-';
+      const time = log.responseTime ?? '-';
+      const trace = log.trace_id?.slice(0, 8) ?? '-';
+
+      return `${method} ${url} ${status} (${time}ms) [${trace}] ${log[messageKey]}`;
+    },
+    customColors: 'debug:blue,info:green,warn:yellow,error:red,fatal:magenta',
+  });
+
+  // prettyStream.pipe(process.stdout); //NOTE: Uncomment me in case pm2 running in cluster mode
+
   const consoleStream: StreamEntry = {
     level: isProduction ? 'info' : 'debug',
-    stream: isProduction
-      ? process.stdout
-      : pinoPretty({
-          colorize: true,
-          levelFirst: true,
-          translateTime: 'HH:MM:ss Z',
-          ignore: generateConsoleStreamIgnoreKeys(),
-          messageFormat: '{level} [{service}/{env}]: {msg}',
-          customColors:
-            'debug:blue,info:green,warn:yellow,error:red,fatal:magenta',
-        }),
+    stream: prettyStream,
   };
 
   streams.push(consoleStream);
@@ -202,6 +228,7 @@ export const getLoggerConfig = (): Params => {
       },
       // Custom log message
       customLogLevel: (req: any, res: any, err: any) => {
+        if (req.url === '/metrics') return 'debug';
         if (res.statusCode >= 500 || err) return 'error';
         if (res.statusCode >= 400) return 'warn';
         return 'info';
