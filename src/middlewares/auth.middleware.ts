@@ -11,7 +11,6 @@ export class AuthMiddleware implements NestMiddleware {
       id: randomBytes(8).toString('hex'),
     };
 
-    console.log('Value injected successfully');
     next();
   }
 }
