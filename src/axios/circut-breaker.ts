@@ -21,7 +21,14 @@ export class CircuitBreakerService {
       const circuitBreakerOptions: CircuitBreaker.Options = {
         timeout: 10000, // fail if external system doesn’t respond in 10s
         errorThresholdPercentage: 50, // open if 50% of requests fail
-        resetTimeout: 5000, // try again after 30s
+        resetTimeout: 5000, // try again after 5s
+        // Only treat errors with HTTP status 502 as failures that count
+        // toward opening the circuit breaker. All other errors are ignored
+        // (won't increment the failure percentage).
+        errorFilter: (err: any) => {
+          const status = err?.response?.status;
+          return status !== 502;
+        },
       };
 
       const breaker = new CircuitBreaker(
