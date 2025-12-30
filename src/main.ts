@@ -8,6 +8,8 @@ import morgan from 'morgan';
 import { PinoLogger, Logger } from 'nestjs-pino';
 import { Request } from 'express';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
+import dotenv from 'dotenv';
+dotenv.config();
 
 async function bootstrap() {
   promoClient.collectDefaultMetrics({ prefix: 'backend_1_' });
