@@ -4,6 +4,7 @@ import { trace, context } from '@opentelemetry/api';
 import type { StreamEntry } from 'pino';
 import { multistream } from 'pino';
 import { Params } from 'nestjs-pino';
+import { isDebugModeEnv, isProductionEnv } from 'src/helper';
 
 const logDir = path.join(process.cwd(), 'logs');
 
@@ -23,8 +24,8 @@ const getTraceContext = () => {
 };
 
 const generateConsoleStreamIgnoreKeys = (): string => {
-  // const isProduction = process.env.NODE_ENV === 'production';
-  const isDebugMode = process.env.DEBUG_MODE === 'true';
+  // const isProduction = isProductionEnv()
+  const isDebugMode = isDebugModeEnv();
 
   let ignoreKeys = [
     'pid',
@@ -49,7 +50,7 @@ const generateConsoleStreamIgnoreKeys = (): string => {
 // Create multi-stream configuration
 export const createLoggerStream = (): StreamEntry[] => {
   const streams: StreamEntry[] = [];
-  const isProduction = process.env.NODE_ENV === 'production';
+  const isProduction = isProductionEnv();
 
   // 1. Console Stream (Pretty format for development)
 
@@ -128,8 +129,8 @@ export const createLoggerStream = (): StreamEntry[] => {
 
 // Base logger configuration
 export const getLoggerConfig = (): Params => {
-  const isProduction = process.env.NODE_ENV === 'production';
-  const isDebugMode = process.env.DEBUG_MODE === 'true';
+  const isProduction = isProductionEnv();
+  const isDebugMode = isDebugModeEnv();
 
   // Custom mixin function to add trace context
   const mixin = () => {

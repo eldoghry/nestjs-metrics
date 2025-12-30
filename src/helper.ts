@@ -14,3 +14,11 @@ export function getRandomItem<T>(arr: T[]): T | undefined {
   const randomIndex = Math.floor(Math.random() * arr.length);
   return arr[randomIndex];
 }
+
+export function isProductionEnv(): boolean {
+  return `${process.env.NODE_ENV?.trim()}` === 'production';
+}
+
+export function isDebugModeEnv(): boolean {
+  return `${process.env.DEBUG_MODE?.trim()}` === 'true';
+}
