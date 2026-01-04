@@ -8,8 +8,8 @@ import {
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 import dotenv from 'dotenv';
 import { join } from 'path';
-import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
-diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
+// import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
+// diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
 
 dotenv.config({
   path: join(
