@@ -31,6 +31,10 @@ export class AppController {
 
   @Get('/success')
   getSuccess(): string {
+    this.logger.debug('this is debug message');
+    this.logger.warn('this is warn message');
+    this.logger.fatal('this is fatal message');
+
     this.logger.info('Successful request received');
     return this.appService.getHello();
   }
@@ -138,10 +142,11 @@ export class AppController {
   async almostError() {
     this.logger.info('Calling almostError from app.controller');
 
-    const isFail = Math.random() < 0.8;
+    const isFail = Math.random() < 0.7;
 
     if (isFail) {
       throw new BadGatewayException();
+      // throw new BadRequestException();
     }
 
     return { message: 'response success with data' };

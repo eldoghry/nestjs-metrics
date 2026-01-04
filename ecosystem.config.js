@@ -18,7 +18,7 @@ module.exports = {
         NODE_ENV: 'production',
         PORT: 3000,
         // You can also put your OTLP Collector URL here for Step 3
-        OTEL_EXPORTER_OTLP_ENDPOINT: 'http://localhost:4318',
+        // OTEL_EXPORTER_OTLP_ENDPOINT: 'http://localhost:4318',
       },
     },
   ],

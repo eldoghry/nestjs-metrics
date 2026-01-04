@@ -4,13 +4,21 @@ import { AppModule } from './app.module';
 import * as promoClient from 'prom-client';
 import { MetricsInterceptor } from './interceptors/metrics.interceptor';
 import { ValidationPipe } from '@nestjs/common';
-import morgan from 'morgan';
 import { PinoLogger, Logger } from 'nestjs-pino';
-import { Request } from 'express';
 import { GlobalExceptionFilter } from './filters/global-exception.filter';
+import { isDebugModeEnv } from './helper';
+// import { Request } from 'express';
+// import morgan from 'morgan';
+// import dotenv from 'dotenv';
+// import { join } from 'path';
 
-import dotenv from 'dotenv';
-dotenv.config({ path: `env/${process.env.NODE_ENV || 'development'}.env` });
+// dotenv.config({
+//   path: join(
+//     process.cwd(),
+//     'env',
+//     `${process.env.NODE_ENV || 'development'}.env`,
+//   ),
+// });
 
 async function bootstrap() {
   promoClient.collectDefaultMetrics({ prefix: 'backend_1_' });
@@ -46,6 +54,7 @@ async function bootstrap() {
     logger.info(`Application is running on: http://localhost:${PORT}`);
     logger.info(`Metrics available at: http://localhost:${PORT}/metrics`);
     logger.info(`Environment: ${process.env.NODE_ENV}`);
+    isDebugModeEnv() && logger.debug('Debug mode is enabled');
   });
 }
 
