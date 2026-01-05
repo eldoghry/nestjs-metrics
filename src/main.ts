@@ -22,6 +22,7 @@ import { isDebugModeEnv } from './helper';
 
 async function bootstrap() {
   promoClient.collectDefaultMetrics({ prefix: 'backend_1_' });
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,

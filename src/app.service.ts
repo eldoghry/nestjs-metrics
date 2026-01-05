@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { AxiosService } from './axios/axios.service';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
 import { DataSource } from 'typeorm';
+import axios from 'axios';
 
 @Injectable()
 export class AppService {
@@ -42,5 +43,17 @@ export class AppService {
       'SELECT * from transactions LIMIT 1;',
     );
     return result;
+  }
+
+  async callExternal() {
+    try {
+      const result = await axios.get(
+        'https://fakerapi.it/api/v2/addresses?_quantity=20',
+      );
+      return result.data;
+    } catch (error) {
+      this.logger.error(`Error calling external API: ${error.message}`);
+      throw error;
+    }
   }
 }

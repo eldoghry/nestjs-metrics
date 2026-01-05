@@ -156,4 +156,9 @@ export class AppController {
   async callDatabase() {
     return this.appService.callDatabase();
   }
+
+  @Get('/external')
+  async callExternal() {
+    return this.appService.callExternal();
+  }
 }
