@@ -6,6 +6,8 @@ import {
   ATTR_SERVICE_VERSION,
 } from '@opentelemetry/semantic-conventions';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
+import { TraceIdRatioBasedSampler } from '@opentelemetry/sdk-trace-base';
+
 import dotenv from 'dotenv';
 import { join } from 'path';
 // import { diag, DiagConsoleLogger, DiagLogLevel } from '@opentelemetry/api';
@@ -27,7 +29,25 @@ const appResource = resourceFromAttributes({
 
 const sdk = new NodeSDK({
   resource: appResource,
-  instrumentations: [getNodeAutoInstrumentations()],
+  /**
+   * 🎯 Sampling: keep only 20% of traces
+   */
+  // sampler: new TraceIdRatioBasedSampler(0.2),
+  instrumentations: [
+    getNodeAutoInstrumentations({
+      '@opentelemetry/instrumentation-http': {
+        ignoreIncomingRequestHook: (req) => {
+          const url = req.url || '';
+          return (
+            url.startsWith('/metrics') ||
+            url.startsWith('/health') ||
+            url.startsWith('/ready') ||
+            url.startsWith('/live')
+          ); // Ignore health check endpoints
+        },
+      },
+    }),
+  ],
   // Use OTLP HTTP exporter (endpoint can be set via env var OTEL_EXPORTER_OTLP_ENDPOINT)
   traceExporter: new OTLPTraceExporter({
     url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT, // ?? 'http://localhost:4318/v1/traces',
