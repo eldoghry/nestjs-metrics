@@ -56,4 +56,16 @@ export class AppService {
       throw error;
     }
   }
+
+  async callExternalAndDatabase() {
+    const [externalData, dbData] = await Promise.all([
+      this.callExternal(),
+      this.callDatabase(),
+    ]);
+
+    return {
+      externalData,
+      dbData,
+    };
+  }
 }
