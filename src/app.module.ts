@@ -1,3 +1,4 @@
+import { ConfigModule } from '@nestjs/config';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -7,6 +8,10 @@ import { trace, context } from '@opentelemetry/api';
 import { AxiosModule } from './axios/axios.module';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { getLoggerConfig } from './logger/logger.config';
+import TYPEORM_OPTIONS from './config/typeorm.config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+const ENV = process.env.NODE_ENV?.trim();
 
 @Module({
   imports: [
@@ -50,7 +55,12 @@ import { getLoggerConfig } from './logger/logger.config';
     //     } as const;
     //   })(),
     // }),
-
+    ConfigModule.forRoot({
+      isGlobal: true,
+      cache: false,
+      envFilePath: `./env/${ENV}.env`,
+    }),
+    TypeOrmModule.forRootAsync(TYPEORM_OPTIONS),
     LoggerModule.forRootAsync({
       useFactory: getLoggerConfig,
     }),

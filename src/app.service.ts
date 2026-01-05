@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AxiosService } from './axios/axios.service';
 import { InjectPinoLogger, PinoLogger } from 'nestjs-pino';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class AppService {
@@ -8,7 +9,7 @@ export class AppService {
 
   constructor(
     private readonly axiosService: AxiosService,
-
+    private readonly datasource: DataSource,
     @InjectPinoLogger(AppService.name)
     private readonly logger: PinoLogger,
   ) {}
@@ -33,5 +34,13 @@ export class AppService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async callDatabase() {
+    this.logger.info('Calling callDatabase from app.service');
+    const result = await this.datasource.query(
+      'SELECT * from transactions LIMIT 1;',
+    );
+    return result;
   }
 }

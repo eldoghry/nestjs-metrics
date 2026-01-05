@@ -151,4 +151,9 @@ export class AppController {
 
     return { message: 'response success with data' };
   }
+
+  @Get('/database')
+  async callDatabase() {
+    return this.appService.callDatabase();
+  }
 }
